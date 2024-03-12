@@ -44,9 +44,9 @@ while True:
             for word in grand_prix_words:
                 for year in searched_years:
                     if word in title and year == year_publi:
-                        #print(title)
-                        id = element['id']
-                        playlists_dict[year_publi].append(id)
+                        info_dict = {'id':None, 'title':None, 'id_videos': [], 'totalViews': 0 }
+                        info_dict['id'], info_dict['title'] = element['id'], title
+                        playlists_dict[year_publi].append(info_dict)
                         count += 1
         # Quando o ano for menor que 2021, não tem mais necessidade de continuar a procurar em todas as playlist, então tornamos uma variável True para que se dê um break no loop
         else:
@@ -58,18 +58,24 @@ while True:
     next_page_token = res.get('nextPageToken')
 
 # -------------- Segunda Etapa ---------------------------
-
-c = 0     
+ 
 for year in playlists_dict.keys():
     print(year)
-    for playlist_id in playlists_dict[year]:
-        res = youtube.playlistItems().list(part='snippet', playlistId=playlist_id).execute()
-        variable = res['items']
-        c += 1
-        for element in variable:
-            print(element['snippet'].keys())
+    for playlist in playlists_dict[year]:
+        #print(playlist['title'])
+        res = youtube.playlistItems().list(part='snippet', maxResults=100, playlistId=playlist['id']).execute()
+        videos_info = res['items']
+        #print(len(videos_info))
+        for video in videos_info:
+            video_id = video['id']
+            #print(video_id)
+            #res = youtube.videos().list(part='statistics', id=video_id).execute()
+            #print(res)
+            #playlist['totalViews'] += int(res['items'][0]['statistics']['viewCount'])
+            #print(video['snippet']['title'])
+            #print(video['snippet'].keys())
+        print(playlist['title'],playlist['totalViews'])       
         print("-----")
             
 
-print(c)
 print(count)
