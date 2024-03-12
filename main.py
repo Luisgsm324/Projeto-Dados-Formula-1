@@ -21,8 +21,8 @@ next_page_token = None
 O programa será dividido em algumas etapas:
 
 1º Etapa: Encontrar as playlists das corridas de 2023, 2022 e 2021;
-2º Etapa: Fazer um somatório da corrida com mais visualização em cada ano; 
-3º Etapa: Determinar o ano com mais visualização;
+2º Etapa: Realizar o somatório dos vídeos em cada playlist; 
+3º Etapa: Organizar as corridas de cada ano em ordem retornando a maior;
 4º Etapa: Determinar a corrida mais vista entre os anos;
 =============================
 
@@ -30,7 +30,7 @@ O programa será dividido em algumas etapas:
 
 # -------------- Primeira Etapa ---------------------------
 
-playlists_dict = {'2021': [], '2022':[], '2023':[]}
+playlists_dict = {'2021': {'playlists':[], 'totalCountYear':0}, '2022':{'playlists':[], 'totalCountYear':0}, '2023':{'playlists':[], 'totalCountYear':0}}
 
 count = 0
 break_condition = False
@@ -44,9 +44,9 @@ while True:
             for word in grand_prix_words:
                 for year in searched_years:
                     if word in title and year == year_publi:
-                        info_dict = {'id':None, 'title':None, 'id_videos': [], 'totalViews': 0 }
+                        info_dict = {'id':None, 'title':None, 'totalViews': 0 }
                         info_dict['id'], info_dict['title'] = element['id'], title
-                        playlists_dict[year_publi].append(info_dict)
+                        playlists_dict[year_publi]['playlists'].append(info_dict)
                         count += 1
         # Quando o ano for menor que 2021, não tem mais necessidade de continuar a procurar em todas as playlist, então tornamos uma variável True para que se dê um break no loop
         else:
@@ -61,21 +61,32 @@ while True:
  
 for year in playlists_dict.keys():
     print(year)
-    for playlist in playlists_dict[year]:
+    for playlist in playlists_dict[year]['playlists']:
         #print(playlist['title'])
         res = youtube.playlistItems().list(part='snippet', maxResults=100, playlistId=playlist['id']).execute()
         videos_info = res['items']
-        #print(len(videos_info))
         for video in videos_info:
-            video_id = video['id']
-            #print(video_id)
-            #res = youtube.videos().list(part='statistics', id=video_id).execute()
-            #print(res)
-            #playlist['totalViews'] += int(res['items'][0]['statistics']['viewCount'])
-            #print(video['snippet']['title'])
-            #print(video['snippet'].keys())
-        print(playlist['title'],playlist['totalViews'])       
-        print("-----")
+            video_id = video['snippet']['resourceId']['videoId']
+            res = youtube.videos().list(part='statistics', id=video_id).execute()
             
+            # Essa condição foi criada para as situações em que existem playlists que tem certos problemas, como vídeos que estão indisponíveis ou ocultos.
+            if len(res['items']) != 0:
+                playlist['totalViews'] += int(res['items'][0]['statistics']['viewCount'])
+                 
+        playlists_dict[year]['totalCountYear'] += playlist['totalViews']      
+
+# -------------- Terceira Etapa --------------------------- 
+
+most_watched_race_2021 = max(playlists_dict['2021']['playlists'], key=lambda x:x['totalViews'])
+print(f"A corrida mais assistida de 2021 foi: {most_watched_race_2021}")
+
+most_watched_race_2022 = max(playlists_dict['2022']['playlists'], key=lambda x:x['totalViews'])
+print(f"A corrida mais assistida de 2022 foi: {most_watched_race_2022}")
+
+most_watched_race_2023 = max(playlists_dict['2023']['playlists'], key=lambda x:x['totalViews'])
+print(f"A corrida mais assistida de 2023 foi: {most_watched_race_2023}")
+
+# -------------- Quarta Etapa --------------------------- 
+
 
 print(count)
