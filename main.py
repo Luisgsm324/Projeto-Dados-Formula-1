@@ -28,6 +28,8 @@ O programa será dividido em algumas etapas:
 
 """
 
+# -------------- Primeira Etapa ---------------------------
+
 playlists_dict = {'2021': [], '2022':[], '2023':[]}
 
 count = 0
@@ -35,12 +37,9 @@ break_condition = False
 
 while True:
     res = youtube.playlists().list(part='snippet', channelId=formula1_channelID, pageToken=next_page_token).execute()
-    # Para conseguir achar o título você chega nessa parte v 
-    title = res['items'][0]['snippet']['title']
     for element in res['items']:
-        playlist_data = element['snippet']
-        title = playlist_data['title']
         year_publi = element['snippet']['publishedAt'].split("-")[0]
+        title = element['snippet']['title']
         if int(year_publi) >= 2021:
             for word in grand_prix_words:
                 for year in searched_years:
@@ -55,11 +54,22 @@ while True:
     
     if break_condition:
         break
-    playlist_id = res['items'][0]['id']
+    
     next_page_token = res.get('nextPageToken')
 
-for ids_list in playlists_dict.values():
-    for id in ids_list:
-        print(id)        
-#print(playlists_dict)
+# -------------- Segunda Etapa ---------------------------
+
+c = 0     
+for year in playlists_dict.keys():
+    print(year)
+    for playlist_id in playlists_dict[year]:
+        res = youtube.playlistItems().list(part='snippet', playlistId=playlist_id).execute()
+        variable = res['items']
+        c += 1
+        for element in variable:
+            print(element['snippet'].keys())
+        print("-----")
+            
+
+print(c)
 print(count)
