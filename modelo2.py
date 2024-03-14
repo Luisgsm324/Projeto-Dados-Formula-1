@@ -5,6 +5,8 @@ Primeiro teste para conseguir os ID's da playlist.
 from googleapiclient.discovery import build
 from statistics import median, mean
 import pandas as pd
+import matplotlib.pyplot as plt
+from tabulate import tabulate
 
 
 # A chave da API
@@ -25,8 +27,8 @@ O programa será dividido em algumas etapas:
 
 1º Etapa: Encontrar as playlists das corridas de 2023, 2022 e 2021;
 2º Etapa: Realizar o somatório dos vídeos em cada playlist; 
-3º Etapa: Organizar as corridas de cada ano em ordem retornando a maior;
-4º Etapa: Dispor os dados de uma forma acessível e tranquila (utilizar bibliotecas externas para executar esses trabalhos);
+3º Etapa: Organizar as corridas de cada ano em ordem retornando a maior e dispor os dados em um formato de tabela;
+4º Etapa: Dispor os dados em formas de tabela para a permissão da visualização gráfica;
 =============================
 
 """
@@ -91,15 +93,32 @@ results = {'years': [], 'medians': [], 'averages': [], 'most_watched_race': [], 
 for year in playlists_dict:
     most_watched_race = max(playlists_dict[year]['playlists'], key=lambda x:x['totalViews'])
     results['years'].append(year)
-    results['medians'].append(f"{median(playlists_dict[year]['viewsList']):.2f}")
-    results['averages'].append(f"{mean(playlists_dict[year]['viewsList']):.2f}")
+    median_variable = median(playlists_dict[year]['viewsList'])
+    results['medians'].append(f"{median_variable:.2f}")
+    average_variable = mean(playlists_dict[year]['viewsList'])
+    results['averages'].append(f"{average_variable:.2f}")
     title = most_watched_race['title'].replace("Formula 1", "")
     results['most_watched_race'].append(title)
     results['totalViewRace'].append(most_watched_race['totalViews'])
     results['totalViewPerYear'].append(playlists_dict[year]['totalViewYear'])
 
+
 df = pd.DataFrame(results)
-print(df)
+headers_list = ["Ano", "Mediana", "Média", "Corrida mais vista", "Views Corrida", "Views Ano Total"]
+print(tabulate(df, headers=headers_list, tablefmt='grid'))
 
-# -------------- Quarta Etapa --------------------------- 
+# -------------- Quarta Etapa ---------------------------
+# Devido à alguns erros na criação da tabela e para melhoria da leituta, 
+#criei uma função para transformar os números em float e apenas os 3 primeiros (para evitar um número tão extenso).
+def process(results_list):
+    liney = []
+    for element in results_list:
+        x = str(element)[0:3]
+        number = float(x)
+        liney.append(number)
+    return liney
+liney = process(results['totalViewPerYear'])
+plt.bar(results['years'], liney, label='Total de Views por ano (Em milhões)')
 
+plt.legend()
+plt.show()
