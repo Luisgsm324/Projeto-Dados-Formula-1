@@ -3,6 +3,9 @@
 Primeiro teste para conseguir os ID's da playlist.
 """
 from googleapiclient.discovery import build
+from statistics import median, mean
+import pandas as pd
+
 
 # A chave da API
 key = "AIzaSyCls8LWBEcyvriLk4PAS5io0NJWzZYj_9Q"
@@ -23,15 +26,14 @@ O programa será dividido em algumas etapas:
 1º Etapa: Encontrar as playlists das corridas de 2023, 2022 e 2021;
 2º Etapa: Realizar o somatório dos vídeos em cada playlist; 
 3º Etapa: Organizar as corridas de cada ano em ordem retornando a maior;
-4º Etapa: Determinar a corrida mais vista entre os anos;
+4º Etapa: Dispor os dados de uma forma acessível e tranquila (utilizar bibliotecas externas para executar esses trabalhos);
 =============================
 
 """
 
 # -------------- Primeira Etapa ---------------------------
 
-playlists_dict = {'2021': {'playlists':[], 'totalViewYear':0, 'countRaces': 0}, '2022':{'playlists':[], 'totalViewYear':0,'countRaces': 0}, '2023':{'playlists':[], 'totalViewYear':0, 'countRaces': 0}}
-
+playlists_dict = {'2021': {'playlists':[], 'totalViewYear':0, 'countRaces': 0, 'viewsList':[]}, '2022':{'playlists':[], 'totalViewYear':0,'countRaces': 0, 'viewsList':[]}, '2023':{'playlists':[], 'totalViewYear':0, 'countRaces': 0, 'viewsList':[]}}
 
 break_condition = False
 
@@ -60,7 +62,6 @@ while True:
 # -------------- Segunda Etapa ---------------------------
  
 for year in playlists_dict.keys():
-    print(year)
     for playlist in playlists_dict[year]['playlists']:
         # Essa variável foi criado com o propósito de procurar o vídeo correspondentes aos highlights da corrida (Em certas situações ele não é o primeiro elemento)
         index = 0
@@ -80,22 +81,25 @@ for year in playlists_dict.keys():
         res = youtube.videos().list(part='statistics', id=video_id).execute()
         playlist['totalViews'] += int(res['items'][0]['statistics']['viewCount'])
 
-                 
+        playlists_dict[year]['viewsList'].append(playlist['totalViews'])       
         playlists_dict[year]['totalViewYear'] += playlist['totalViews']      
 
 # -------------- Terceira Etapa --------------------------- 
 
-most_watched_race_2021 = max(playlists_dict['2021']['playlists'], key=lambda x:x['totalViews'])
-print(f"A corrida mais assistida de 2021 foi: {most_watched_race_2021}")
-print(playlists_dict['2021']['countRaces'], playlists_dict['2021']['totalViewYear'])
+results = {'years': [], 'medians': [], 'averages': [], 'most_watched_race': [], 'totalViewRace':[], 'totalViewPerYear': []}
 
-most_watched_race_2022 = max(playlists_dict['2022']['playlists'], key=lambda x:x['totalViews'])
-print(f"A corrida mais assistida de 2022 foi: {most_watched_race_2022}")
-print(playlists_dict['2022']['countRaces'], playlists_dict['2022']['totalViewYear'])
+for year in playlists_dict:
+    most_watched_race = max(playlists_dict[year]['playlists'], key=lambda x:x['totalViews'])
+    results['years'].append(year)
+    results['medians'].append(f"{median(playlists_dict[year]['viewsList']):.2f}")
+    results['averages'].append(f"{mean(playlists_dict[year]['viewsList']):.2f}")
+    title = most_watched_race['title'].replace("Formula 1", "")
+    results['most_watched_race'].append(title)
+    results['totalViewRace'].append(most_watched_race['totalViews'])
+    results['totalViewPerYear'].append(playlists_dict[year]['totalViewYear'])
 
-most_watched_race_2023 = max(playlists_dict['2023']['playlists'], key=lambda x:x['totalViews'])
-print(f"A corrida mais assistida de 2023 foi: {most_watched_race_2023}")
-print(playlists_dict['2023']['countRaces'], playlists_dict['2023']['totalViewYear'])
+df = pd.DataFrame(results)
+print(df)
 
 # -------------- Quarta Etapa --------------------------- 
 
