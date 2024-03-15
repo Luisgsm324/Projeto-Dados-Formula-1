@@ -7,7 +7,7 @@ O projeto, construído inteiramente por mim, foi realizado com o objetivo de ext
 É necessário que se tenha a linguagem de programação *Python* instalado em sua máquina e que sejam baixado as seguintes dependências por meio dos seguintes passos:
 
 ```bash 
-pip install pandas matplotlib tabulate
+pip install pandas matplotlib tabulate babel
 ```
 
 ```bash 
@@ -39,4 +39,7 @@ Os recursos abaixos foram utilizados com o propósito de alcançar o objetivo pr
 *[MatplotLib](https://matplotlib.org/stable/index.html) - Biblioteca do Python utilizada para a criação do gráfico com a amostragem de certos dados.
 
 *[Tabulate](https://pypi.org/project/tabulate/) - Biblioteca do Python utilizada para a formatação em uma melhor estrutura visual para o DataFrame criada pelo Pandas.
+
+*[Babel](https://babel.pocoo.org/en/latest/api/numbers.html) - Biblioteca do Python utilizada para a formatação dos números extensos que serão expostos na tabela
+
 
