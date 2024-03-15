@@ -1,17 +1,13 @@
 # Projeto teste de Extração de Dados da Fórmula 1
 
-O projeto, construído inteiramente por mim, foi realizado com o objetivo de extrair os dados das playlists do canal do YouTube da "Fórmula 1" a fim de se obter as corridas que obteram o maior número de visualizações no ano específico, fato que nos parâmetros determinados consideraria a corrida mais popular ocorrida nesse período. Os anos são 2021, 2022 e 2023 com um total de mais de 60 corridas ocorridas durante esses 3 anos. 
+O projeto foi realizado com o objetivo de extrair os dados das playlists do canal do YouTube da "Fórmula 1" a fim de se obter as corridas que obteram o maior número de visualizações no ano específico, fato que nos parâmetros determinados consideraria a corrida mais popular ocorrida nesse período. Os anos são 2021, 2022 e 2023 com um total de mais de 60 corridas ocorridas durante esses 3 anos. 
 
 ## Pré-requisitos e Execução
 
 É necessário que se tenha a linguagem de programação *Python* instalado em sua máquina e que sejam baixado as seguintes dependências por meio dos seguintes passos:
 
 ```bash 
-pip install pandas matplotlib tabulate babel
-```
-
-```bash 
-pip install --upgrade google-api-python-client
+pip install -r requirements.txt
 ```
 
 Para a execução do programa, basta entrar na pasta corretamente:
@@ -42,4 +38,5 @@ Os recursos abaixos foram utilizados com o propósito de alcançar o objetivo pr
 
 *[Babel](https://babel.pocoo.org/en/latest/api/numbers.html) - Biblioteca do Python utilizada para a formatação dos números extensos que serão expostos na tabela
 
-
+---
+Produzido inteiramente por [Luís Moreira](https://github.com/Luisgsm324). Confira o meu [Linkedin](https://www.linkedin.com/in/luissoutomoreira/)
