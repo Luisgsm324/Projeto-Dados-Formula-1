@@ -1,7 +1,3 @@
-"""
-{09/03/2024} -> 
-Primeiro teste para conseguir os ID's da playlist.
-"""
 from googleapiclient.discovery import build
 from statistics import median, mean
 import pandas as pd
@@ -26,11 +22,10 @@ next_page_token = None
 O programa será dividido em algumas etapas:
 
 1º Etapa: Encontrar as playlists das corridas de 2023, 2022 e 2021;
-2º Etapa: Realizar o somatório dos vídeos em cada playlist; 
+2º Etapa: Armazenar o valor das visualizações do vídeo de Highlights; 
 3º Etapa: Organizar as corridas de cada ano em ordem retornando a maior e dispor os dados em um formato de tabela;
 4º Etapa: Dispor os dados em formas de tabela para a permissão da visualização gráfica;
 =============================
-
 """
 
 # -------------- Primeira Etapa ---------------------------
