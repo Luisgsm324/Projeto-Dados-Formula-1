@@ -39,4 +39,4 @@ Os recursos abaixos foram utilizados com o propósito de alcançar o objetivo pr
 *[Babel](https://babel.pocoo.org/en/latest/api/numbers.html) - Biblioteca do Python utilizada para a formatação dos números extensos que serão expostos na tabela
 
 ---
-Produzido inteiramente por [Luís Moreira](https://github.com/Luisgsm324). Confira o meu [Linkedin](https://www.linkedin.com/in/luissoutomoreira/)
+Produzido inteiramente por [Luís Moreira](https://github.com/Luisgsm324). Confira o meu [Linkedin](https://www.linkedin.com/in/luissoutomoreira/) e obrigado por ler até aqui 😊
