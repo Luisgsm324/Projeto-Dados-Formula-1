@@ -1,5 +1,7 @@
 from googleapiclient.discovery import build
 from year_info import Year_info
+import pandas as pd
+from tabulate import tabulate
 
 class Data_system(Year_info):
     def __init__(self, key, channel_id, selected_words, selected_dates):
@@ -13,12 +15,38 @@ class Data_system(Year_info):
     
     def acess_info_runs(self):
         for year_info in self.selected_dates:
+            results = []
             print(f"Corridas realizadas no ano de {year_info.year}")
-            count = 1
+            count = 0
             for playlist_info in year_info.playlists:
-                print(f"{count} - {playlist_info['title']}")
+                ref = (playlist_info['title'], playlist_info['totalViews'])
+                results.append(ref)
+            results.sort(reverse=True, key=lambda x:x[1])
+            for element in results:
                 count += 1
+                print(f"{count} - {element[0]} - {element[1]}")
             print(f"Foram realizadas {count} corridas na temporada de {year_info.year}\n-------------------")
+
+    def acess_info_geral(self):
+        # Dicionário que será disposto para mostrar os resultados
+        results = {'years': [], 'medians': [], 'averages': [], 'most_watched_race': [], 'totalViewRace':[], 'totalViewPerYear': []}
+        for year_info in self.selected_dates:
+            most_watched_race = year_info.find_racetitle()
+            median_year = year_info.find_median()
+            average_year = year_info.find_average()
+            totalviewsrace = year_info.find_totalviewsrace()
+            totalviewsyear = year_info.find_totalviewsyear()
+
+            results['years'].append(year_info.year)
+            results['medians'].append(median_year)
+            results['averages'].append(average_year)
+            results['most_watched_race'].append(most_watched_race)
+            results['totalViewRace'].append(totalviewsrace)
+            results['totalViewPerYear'].append(totalviewsyear)
+        
+        df = pd.DataFrame(results)
+        headers_list = ["Ano", "Mediana", "Média", "Corrida mais vista", "Views Corrida", "Views Ano Total"]
+        print(tabulate(df, headers=headers_list, tablefmt='grid'))
 
     def acess_info_year(self):
         print("------- Panorama geral dos anos -------")
@@ -27,6 +55,7 @@ class Data_system(Year_info):
             print(f"{year_info.year} registrou um total de {year_info.countraces} corridas ao decorrer do ano.\nO total de visualizações foi {year_info.totalviewyear} e a corrida mais assistida foi {most_watched_race['title']} com {most_watched_race['totalViews']}")   
     
     def load_informations(self): # Função para encontrar as playlists com os parâmetros informados
+        print("Carregando...")
         # Variável criada com o intuito de parar de buscar mais playlists, melhorando a otimização
         break_condition = False
         next_page_token = None
@@ -77,11 +106,11 @@ class Data_system(Year_info):
 
             year_info.viewslist.append(playlist['totalViews'])       
             year_info.totalviewyear += playlist['totalViews']               
-    
+
+        print("Processo finalizado :)")
     
 sistema = Data_system('AIzaSyCls8LWBEcyvriLk4PAS5io0NJWzZYj_9Q', 'UCB_qr75-ydFVKSF9Dmo6izg', ["Grand Prix", "Gran Premio", "Grosser Preis", "Grossen Preis", "Grande Premio", "Grande Prêmio", "Magyar Nagydij"], ["2021", "2022", "2023"])
 
 sistema.load_informations()
 
 sistema.acess_info_runs()
-sistema.acess_info_year()
