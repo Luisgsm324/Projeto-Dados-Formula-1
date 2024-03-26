@@ -109,8 +109,3 @@ class Data_system(Year_info):
 
         print("Processo finalizado :)")
     
-sistema = Data_system('AIzaSyCls8LWBEcyvriLk4PAS5io0NJWzZYj_9Q', 'UCB_qr75-ydFVKSF9Dmo6izg', ["Grand Prix", "Gran Premio", "Grosser Preis", "Grossen Preis", "Grande Premio", "Grande Prêmio", "Magyar Nagydij"], ["2021", "2022", "2023"])
-
-sistema.load_informations()
-
-sistema.acess_info_runs()
