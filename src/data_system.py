@@ -104,8 +104,8 @@ class Data_system(Year_info):
                 res = self.youtube.videos().list(part='statistics', id=video_id).execute()
                 playlist['totalViews'] += int(res['items'][0]['statistics']['viewCount'])
 
-            year_info.viewslist.append(playlist['totalViews'])       
-            year_info.totalviewyear += playlist['totalViews']               
+                year_info.viewslist.append(playlist['totalViews'])       
+                year_info.totalviewyear += playlist['totalViews']               
 
         print("Processo finalizado :)")
     

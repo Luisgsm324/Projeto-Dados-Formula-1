@@ -1,4 +1,4 @@
-from statistics import median, mean
+from statistics import median
 from babel.numbers import format_compact_decimal, format_decimal
 
 class Year_info:
@@ -32,7 +32,7 @@ class Year_info:
         return formated_result
     
     def find_average(self):
-        result = mean(self.viewslist)
+        result = sum(self.viewslist)/len(self.viewslist)
         formated_result = format_compact_decimal(result, format_type='short', fraction_digits=2, locale='pt_BR')
         return formated_result
             
